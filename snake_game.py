@@ -2,9 +2,32 @@ import random
 import sys
 import pygame
 from pygame.math import Vector2
-from settings import *
 
 pygame.init()
+
+# VARIABLES
+WIDTH, HEIGHT = 400, 500
+FPS = 60
+SURF_WIDTH, SURF_HEIGHT = 100, 200
+CELL_SIZE = 40
+CELL_NUMBER = 15
+MID_W, MID_H = (CELL_NUMBER * CELL_SIZE) / 2, (CELL_NUMBER * CELL_SIZE) / 2
+WI, HE = CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE
+TITLE = "SNAKE!"
+FONT_NAME = 'SNAKE/DinoTopia.ttf'
+
+# COLORS
+GREEN = (175, 251, 70)
+TILT = (102, 188, 196)
+PURPLE = (161, 110, 196)
+RED = (195, 12, 29)
+TURQUOISE = (57, 199, 172)
+GRASS_COLOR = (175, 243, 70)
+BLACK = (0, 0, 0)
+YELLOW = (250, 231, 1)
+YELLOW_GRASS = (255, 213, 1)
+WHITE = (255, 255, 255)
+LIGHT_BLUE = (84, 175, 243)
 
 # IMAGES
 LOAD_APPLE = pygame.image.load('Graphics/small_apple.png')
