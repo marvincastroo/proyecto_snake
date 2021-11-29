@@ -27,6 +27,9 @@ CLOCK = pygame.time.Clock()
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)  # 150 milliseconds
 
+# STATE
+PLAYING, GAMEOVER = range(2)
+
 
 class Snake:
     def __init__(self):
@@ -158,22 +161,32 @@ class Main:
         self.running = True
         self.GAME_FONT = pygame.font.match_font(FONT_NAME)
         self.lose_sound = pygame.mixer.Sound('Sound/lose.wav')
+        self.dead = True
+        self.currentState = PLAYING
 
     def update(self):
-        self.snake.move_snake()
-        self.check_collision()
-        self.check_fail()
+        if not self.dead:
+            self.snake.move_snake()
+            self.check_collision()
+            self.check_fail()
+
+    def checkReset(self, events):
+        for event in events:
+            if event.type == pygame.KEYUP:
+                self.currentState = PLAYING
+                self.snake.reset()
+                self.dead = True
 
     def show_go_screen(self):
         # game over/continue
-        key = pygame.event.get()
+        # key = pygame.event.get()
         score_text = len(self.snake.body) - 3
         SCREEN.fill(LIGHT_BLUE)
         self.draw_text("GAME OVER", 60, WI / 2, HE / 4, WHITE)
         self.draw_text("Score: " + str(score_text), 30, WI / 2, HE / 2, WHITE)
         self.draw_text("Press a key to play again", 30, WI / 2, HE * 3 / 4, WHITE)
-        pygame.display.update()
-        self.wait_for_key(key)
+        # pygame.display.update()
+        # self.wait_for_key(key)
 
     def draw_elements(self):
         draw_grass()
@@ -191,27 +204,26 @@ class Main:
                 self.fruit.randomize()
 
     def game_over(self):
-        self.snake.reset()
-        print('game over')
+        self.currentState = GAMEOVER
 
     def wait_for_key(self, events_key):
         for event_key in events_key:
             if event_key.type == pygame.KEYUP:
-                self.running = True
+                self.dead = False
 
     def check_fail(self):
         # key = pygame.event.get()
-        dead = False
         if not 0 <= self.snake.body[0].x < CELL_NUMBER \
                 or not 0 <= self.snake.body[0].y < CELL_NUMBER:
             # self.show_go_screen(key)
-            dead = True
+            self.dead = True
 
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
                 # self.show_go_screen(key)
-                dead = True
-        if dead is True:
+                self.dead = True
+
+        if self.dead:
             self.game_over()
 
     def draw(self):
@@ -219,7 +231,7 @@ class Main:
         score_text = str(len(self.snake.body) - 3)
         self.draw_text(str(score_text), 40, WI / 2, 15, WHITE)
         # *after* drawing everything, flip the display
-        pygame.display.flip()
+        # pygame.display.flip()
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.GAME_FONT, size)
@@ -262,7 +274,8 @@ def motion():
 main_game = Main()
 
 while main_game.running:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -270,8 +283,14 @@ while main_game.running:
             main_game.update()
         if event.type == pygame.KEYDOWN:
             motion()
+
     SCREEN.fill(GREEN)
-    main_game.draw_elements()
-    # main_game.show_go_screen(key)
-    pygame.display.update()
+    if main_game.currentState == PLAYING:
+        main_game.wait_for_key(events)
+        main_game.draw_elements()
+    elif main_game.currentState == GAMEOVER:
+        main_game.checkReset(events)
+        main_game.show_go_screen()
+
+    pygame.display.flip()
     CLOCK.tick(FPS)
