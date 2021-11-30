@@ -4,6 +4,7 @@ import pygame
 from pygame.math import Vector2
 
 pygame.init()
+pygame.font.init()
 
 # VARIABLES
 WIDTH, HEIGHT = 400, 500
@@ -14,7 +15,7 @@ CELL_NUMBER = 15
 MID_W, MID_H = (CELL_NUMBER * CELL_SIZE) / 2, (CELL_NUMBER * CELL_SIZE) / 2
 WI, HE = CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE
 TITLE = "SNAKE!"
-FONT_NAME = 'SNAKE/DinoTopia.ttf'
+PIXEL = 'SNAKE/8bit16.ttf'
 click = False
 
 # COLORS
@@ -181,41 +182,54 @@ class Fruit:
 class Menu:
     def __init__(self):
         self.running = True
-        self.GAME_FONT = pygame.font.match_font(FONT_NAME)
+        self.menu_font = 'SNAKE/pixel_font.ttf'
         self.white_screen = SCREEN.fill(WHITE)
+        self.click_sound = pygame.mixer.Sound('Sound/click.wav')
+        self.play_sound = pygame.mixer.Sound('Sound/play.wav')
 
     def draw_text(self, text, size, x, y, color):
-        font = pygame.font.Font(self.GAME_FONT, size)
+        font = pygame.font.Font(self.menu_font, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
         SCREEN.blit(text_surface, text_rect)
 
     def menu_screen(self):
-        while self.running == True:
-            SCREEN.fill(WHITE)
-            self.draw_text("MENUUUUU ", 60, WI / 2, HE / 4, BLACK)
-
+        while self.running is True:
+            SCREEN.fill(BLACK)
+            self.draw_text("SNAKE!", 60, WI / 2, HE / 4, WHITE)
             mx, my = pygame.mouse.get_pos()
 
-            button_1 = pygame.Rect(50, 100, 200, 50)
-            button_2 = pygame.Rect(50, 200, 200, 50)
+            button_1 = pygame.Rect(200, 225, 200, 50)
+            button_2 = pygame.Rect(200, 325, 200, 50)
+            button_3 = pygame.Rect(200, 425, 200, 50)
 
             if button_1.collidepoint((mx, my)):
                 if click:
+                    self.play_sound.play()
                     self.running = False
-                    return 1
-                    #aqui se llama a la funcion Main para que corra el juego
                     print("game")
-
-
+                    return 1
+                    # aqui se llama a la funcion Main para que corra el juego
 
             if button_2.collidepoint((mx, my)):
                 if click:
+                    self.click_sound.play()
+                    self.running = False
+                    print("high scores")
+                    return 2
+
+            if button_3.collidepoint((mx, my)):
+                if click:
+                    self.click_sound.play()
                     print("options")
 
-            pygame.draw.rect(SCREEN, (255, 0, 0), button_1)
-            pygame.draw.rect(SCREEN, (255, 0, 0), button_2)
+            pygame.draw.rect(SCREEN, WHITE, button_1)
+            self.draw_text('PLAY', 30, 200, 225, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_2)
+            self.draw_text('SCORES', 30, 200, 325, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_3)
+            self.draw_text('OPTIONS', 30, 200, 425, RED)
 
             click = False
             for event in pygame.event.get():
@@ -232,11 +246,6 @@ class Menu:
             pygame.display.update()
 
 
-
-
-
-
-
 class Main:
     def __init__(self):
         self.high_score = 0
@@ -244,10 +253,11 @@ class Main:
         self.snake = Snake()
         self.fruit = Fruit()
         self.running = True
-        self.GAME_FONT = pygame.font.match_font(FONT_NAME)
         self.lose_sound = pygame.mixer.Sound('Sound/lose.wav')
         self.dead = True
         self.currentState = PLAYING
+        self.play_sound = pygame.mixer.Sound('Sound/play.wav')
+        self.game_font = 'SNAKE/pixel_font.ttf'
 
     def update(self):
         if not self.dead:
@@ -261,6 +271,7 @@ class Main:
                 self.currentState = PLAYING
                 self.snake.reset()
                 self.dead = True
+                self.play_sound.play()
 
     def play_go_sound(self):
         self.lose_sound.play()
@@ -268,18 +279,18 @@ class Main:
     def show_go_screen(self):
         # game over/continue
         score_text = len(self.snake.body) - 3
-        SCREEN.fill(LIGHT_BLUE)
+        SCREEN.fill(BLACK)
         if score_text > self.high_score:
             self.high_score = score_text
             self.HS = True
         elif score_text < self.high_score:
             self.HS = False
-        self.draw_text("GAME OVER", 60, WI / 2, HE / 3, WHITE)
-        self.draw_text("Score: " + str(score_text), 30, WI / 2, HE / 2 - 25, WHITE)
-        self.draw_text("Press a key to play again", 30, WI / 2, HE * 3 / 4, WHITE)
-        self.draw_text("High Score: " + str(self.high_score), 30, WI / 2, HE / 2 + 25, WHITE)
+        self.draw_text("GAME OVER", 50, WI / 2, HE / 3, WHITE)
+        self.draw_text("Score: " + str(score_text), 20, WI / 2, HE / 2 - 25, WHITE)
+        self.draw_text("Press a key to play again", 20, WI / 2, HE * 3 / 4, WHITE)
+        self.draw_text("High Score: " + str(self.high_score), 20, WI / 2, HE / 2 + 25, WHITE)
         if self.HS is True:
-            self.draw_text("NEW HIGH SCORE!!", 40, WI / 2, HE / 2 + 85, RED)
+            self.draw_text("NEW HIGH SCORE!!", 25, WI / 2, HE / 2 + 85, RED)
 
     def draw_elements(self):
         draw_grass()
@@ -305,15 +316,12 @@ class Main:
                 self.dead = False
 
     def check_fail(self):
-        # key = pygame.event.get()
         if not 0 <= self.snake.body[0].x < CELL_NUMBER \
                 or not 0 <= self.snake.body[0].y < CELL_NUMBER:
-            # self.show_go_screen(key)
             self.dead = True
 
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
-                # self.show_go_screen(key)
                 self.dead = True
 
         if self.dead:
@@ -321,14 +329,12 @@ class Main:
             self.play_go_sound()
 
     def draw(self):
-        # Game Loop - draw
+        # draw score
         score_text = str(len(self.snake.body) - 3)
-        self.draw_text(str(score_text), 40, WI / 2, 15, WHITE)
-        # *after* drawing everything, flip the display
-        # pygame.display.flip()
+        self.draw_text(str(score_text), 25, WI / 2, 15, WHITE)
 
     def draw_text(self, text, size, x, y, color):
-        font = pygame.font.Font(self.GAME_FONT, size)
+        font = pygame.font.Font(self.game_font, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
@@ -363,9 +369,6 @@ def motion():
         if main_game.snake.direction.x != -1:
             main_game.snake.direction = Vector2(1, 0)
 
-
-# CALLING MAIN FUNCTION
-#main_game = Main()
 
 menu = Menu()
 
