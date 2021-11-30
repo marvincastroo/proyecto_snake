@@ -195,7 +195,8 @@ class Menu:
         SCREEN.blit(text_surface, text_rect)
 
     def menu_screen(self):
-        while self.running is True:
+        click = ""
+        while self.running == True:
             SCREEN.fill(BLACK)
             self.draw_text("SNAKE!", 60, WI / 2, HE / 4, WHITE)
             mx, my = pygame.mouse.get_pos()
@@ -212,12 +213,12 @@ class Menu:
                     return 1
                     # aqui se llama a la funcion Main para que corra el juego
 
-            if button_2.collidepoint((mx, my)):
+            elif button_2.collidepoint((mx, my)):
                 if click:
-                    self.click_sound.play()
                     self.running = False
-                    print("high scores")
-                    return 2
+                    print("highscores")
+                    highscores = Highscores()
+                    highscores.scores_in_display()
 
             if button_3.collidepoint((mx, my)):
                 if click:
@@ -245,6 +246,57 @@ class Menu:
                         click = True
             pygame.display.update()
 
+
+class Highscores():
+
+    def __init__(self):
+        self.running = True
+        self.runningHS = True
+        self.GAME_FONT = "SNAKE/pixel_font.ttf"
+        self.white_screen = SCREEN.fill(WHITE)
+
+    def draw_text(self, text, size, x, y, color):
+        font = pygame.font.Font(self.GAME_FONT, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x, y)
+        SCREEN.blit(text_surface, text_rect)
+
+    def scores_in_display(self):
+
+        text_file_location = "Scores/Scores.txt"
+        file = open(text_file_location)
+        info_highscores = file.readlines()
+        file.close()
+
+        info_highscores.sort(reverse=True)
+        print(info_highscores)
+        while self.runningHS == True:
+            SCREEN.fill(WHITE)
+            self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
+            self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
+            self.draw_text(("1. Score: " + info_highscores[0]), 20, WI / 2, 300 , BLACK)
+            self.draw_text(("2. Score: " + info_highscores[1]), 20, WI / 2, 350, BLACK)
+            self.draw_text(("3. Score: " + info_highscores[2]), 20, WI / 2, 400, BLACK)
+
+
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.runningHS = False
+
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+            pygame.display.update()
+        if self.runningHS == False:
+            menu = Menu()
+            menu.menu_screen()
 
 class Main:
     def __init__(self):
@@ -371,11 +423,16 @@ def motion():
 
 
 menu = Menu()
+correr_juego = False
+correr_highscores = False
+highscores = Highscores()
 
 if menu.menu_screen() == 1:
     main_game = Main()
+    print("si")
+    correr_juego = True
 
-while main_game.running:
+while correr_juego:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
