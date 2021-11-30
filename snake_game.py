@@ -52,7 +52,7 @@ CLOCK = pygame.time.Clock()
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)  # 150 milliseconds
 
-# STATE
+# STATE .
 PLAYING, GAMEOVER = range(2)
 
 
@@ -186,6 +186,8 @@ class Menu:
         self.white_screen = SCREEN.fill(WHITE)
         self.click_sound = pygame.mixer.Sound('Sound/click.wav')
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
+        self.played = True
+        self.key_esc = True
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.menu_font, size)
@@ -196,7 +198,7 @@ class Menu:
 
     def menu_screen(self):
         click = ""
-        while self.running == True:
+        while self.running is True:
             SCREEN.fill(BLACK)
             self.draw_text("SNAKE!", 60, WI / 2, HE / 4, WHITE)
             mx, my = pygame.mouse.get_pos()
@@ -211,7 +213,6 @@ class Menu:
                     self.running = False
                     print("game")
                     return 1
-                    # aqui se llama a la funcion Main para que corra el juego
 
             elif button_2.collidepoint((mx, my)):
                 if click:
@@ -226,11 +227,11 @@ class Menu:
                     print("options")
 
             pygame.draw.rect(SCREEN, WHITE, button_1)
-            self.draw_text('PLAY', 30, 200, 225, RED)
+            self.draw_text('PLAY', 25, 200+100, 225+25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_2)
-            self.draw_text('SCORES', 30, 200, 325, RED)
+            self.draw_text('SCORES', 25, 200+100, 325+25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_3)
-            self.draw_text('OPTIONS', 30, 200, 425, RED)
+            self.draw_text('OPTIONS', 25, 200+100, 425+25, RED)
 
             click = False
             for event in pygame.event.get():
@@ -247,8 +248,7 @@ class Menu:
             pygame.display.update()
 
 
-class Highscores():
-
+class Highscores:
     def __init__(self):
         self.running = True
         self.runningHS = True
@@ -263,42 +263,25 @@ class Highscores():
         SCREEN.blit(text_surface, text_rect)
 
     def scores_in_display(self):
-        lista_highscores = []
         text_file_location = "Scores/Scores.txt"
         file = open(text_file_location)
         for linea in file:
             lista_highscores = linea.split(",")
-            if len(lista_highscores) != 0:
-                lista_highscores.pop()
+        lista_highscores.pop()
         print(lista_highscores)
-
         for i in range(0, (len(lista_highscores))):
             lista_highscores[i] = int(lista_highscores[i])
         print(lista_highscores)
         file.close()
         lista_highscores.sort(reverse=True)
         print(lista_highscores)
-        print(len(lista_highscores))
-        while self.runningHS == True:
+        while self.runningHS is True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
-            if len(lista_highscores) == 0:
-                self.draw_text("No hay ningún puntaje", 20, WI / 2, 250, BLACK)
-            elif len(lista_highscores) == 1:
-                self.draw_text("El puntaje más alto: ", 20, WI / 2, 250, BLACK)
-                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300 , BLACK)
-            elif len(lista_highscores) == 2:
-                self.draw_text("Los dos puntajes más altos:", 20, WI / 2, 250, BLACK)
-                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300, BLACK)
-                self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
-            elif len(lista_highscores) > 2:
-                self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
-                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300, BLACK)
-                self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
-                self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
-
-
-
+            self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
+            self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300 , BLACK)
+            self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
+            self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -306,15 +289,14 @@ class Highscores():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.runningHS = False
-
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
             pygame.display.update()
-        if self.runningHS == False:
+        if self.runningHS is False:
             menu = Menu()
             menu.menu_screen()
+
 
 class Main:
     def __init__(self):
@@ -328,12 +310,16 @@ class Main:
         self.currentState = PLAYING
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
         self.game_font = 'SNAKE/pixel_font.ttf'
+        self.menu = False
 
     def update(self):
         if not self.dead:
             self.snake.move_snake()
             self.check_collision()
             self.check_fail()
+        if self.menu is True:
+            main_menu = Menu()
+            main_menu.menu_screen()
 
     def checkReset(self, events):
         for event in events:
@@ -342,6 +328,14 @@ class Main:
                 self.snake.reset()
                 self.dead = True
                 self.play_sound.play()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.menu = True
+            if self.menu is True:
+                self.menu = False
+                self.dead = True
+                main_menu = Menu()
+                main_menu.menu_screen()
 
     def play_go_sound(self):
         self.lose_sound.play()
@@ -362,7 +356,8 @@ class Main:
         self.draw_text("GAME OVER", 50, WI / 2, HE / 3, WHITE)
         self.draw_text("Score: " + str(score_text), 20, WI / 2, HE / 2 - 25, WHITE)
         self.draw_text("Press a key to play again", 20, WI / 2, HE * 3 / 4, WHITE)
-        self.draw_text("High Score: " + str(self.high_score), 20, WI / 2, HE / 2 + 25, WHITE)
+        self.draw_text("or ESC for main menu", 20, WI / 2, HE * 3 / 4 + 25, WHITE)
+        self.draw_text("High Score: " + str(self.high_score), 20, WI / 2, HE / 2 + 28, WHITE)
         if self.HS is True:
             self.draw_text("NEW HIGH SCORE!!", 25, WI / 2, HE / 2 + 85, RED)
 
@@ -388,6 +383,8 @@ class Main:
         for event_key in events_key:
             if event_key.type == pygame.KEYUP:
                 self.dead = False
+            if event_key.type == pygame.K_ESCAPE:
+                return 1
 
     def check_fail(self):
         if not 0 <= self.snake.body[0].x < CELL_NUMBER \
@@ -453,6 +450,7 @@ if menu.menu_screen() == 1:
     main_game = Main()
     print("si")
     correr_juego = True
+
 
 while correr_juego:
     events = pygame.event.get()
