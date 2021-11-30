@@ -266,18 +266,29 @@ class Highscores():
 
         text_file_location = "Scores/Scores.txt"
         file = open(text_file_location)
-        info_highscores = file.readlines()
+        for linea in file:
+            lista_highscores = linea.split(",")
+        lista_highscores.pop()
+        print(lista_highscores)
+
+        for i in range(0, (len(lista_highscores))):
+            lista_highscores[i] = int(lista_highscores[i])
+
+
+
+        print(lista_highscores)
+
         file.close()
 
-        info_highscores.sort(reverse=True)
-        print(info_highscores)
+        lista_highscores.sort(reverse=True)
+        print(lista_highscores)
         while self.runningHS == True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
             self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
-            self.draw_text(("1. Score: " + info_highscores[0]), 20, WI / 2, 300 , BLACK)
-            self.draw_text(("2. Score: " + info_highscores[1]), 20, WI / 2, 350, BLACK)
-            self.draw_text(("3. Score: " + info_highscores[2]), 20, WI / 2, 400, BLACK)
+            self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300 , BLACK)
+            self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
+            self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
 
 
 
@@ -335,6 +346,10 @@ class Main:
         if score_text > self.high_score:
             self.high_score = score_text
             self.HS = True
+            ruta = "Scores/Scores.txt"
+            file = open(ruta, "a")
+            file.write(str(score_text) + ",")
+            file.close()
         elif score_text < self.high_score:
             self.HS = False
         self.draw_text("GAME OVER", 50, WI / 2, HE / 3, WHITE)
