@@ -52,7 +52,7 @@ CLOCK = pygame.time.Clock()
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)  # 150 milliseconds
 
-# STATE
+# STATE .
 PLAYING, GAMEOVER = range(2)
 
 
