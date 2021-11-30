@@ -6,7 +6,7 @@ from pygame.math import Vector2
 pygame.init()
 pygame.font.init()
 
-# VARIABLES
+# VARIABLES PROBANDO HOLA
 WIDTH, HEIGHT = 400, 500
 FPS = 60
 SURF_WIDTH, SURF_HEIGHT = 100, 200
