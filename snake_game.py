@@ -15,6 +15,7 @@ MID_W, MID_H = (CELL_NUMBER * CELL_SIZE) / 2, (CELL_NUMBER * CELL_SIZE) / 2
 WI, HE = CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE
 TITLE = "SNAKE!"
 FONT_NAME = 'SNAKE/DinoTopia.ttf'
+click = False
 
 # COLORS
 GREEN = (175, 251, 70)
@@ -177,6 +178,65 @@ class Fruit:
         self.pos = Vector2(self.x, self.y)
 
 
+class Menu:
+    def __init__(self):
+        self.running = True
+        self.GAME_FONT = pygame.font.match_font(FONT_NAME)
+        self.white_screen = SCREEN.fill(WHITE)
+
+    def draw_text(self, text, size, x, y, color):
+        font = pygame.font.Font(self.GAME_FONT, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x, y)
+        SCREEN.blit(text_surface, text_rect)
+
+    def menu_screen(self):
+        while self.running == True:
+            SCREEN.fill(WHITE)
+            self.draw_text("MENUUUUU ", 60, WI / 2, HE / 4, BLACK)
+
+            mx, my = pygame.mouse.get_pos()
+
+            button_1 = pygame.Rect(50, 100, 200, 50)
+            button_2 = pygame.Rect(50, 200, 200, 50)
+
+            if button_1.collidepoint((mx, my)):
+                if click:
+                    self.running = False
+                    return 1
+                    #aqui se llama a la funcion Main para que corra el juego
+                    print("game")
+
+
+
+            if button_2.collidepoint((mx, my)):
+                if click:
+                    print("options")
+
+            pygame.draw.rect(SCREEN, (255, 0, 0), button_1)
+            pygame.draw.rect(SCREEN, (255, 0, 0), button_2)
+
+            click = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+            pygame.display.update()
+
+
+
+
+
+
+
 class Main:
     def __init__(self):
         self.snake = Snake()
@@ -293,8 +353,27 @@ def motion():
             main_game.snake.direction = Vector2(1, 0)
 
 
+
+
 # CALLING MAIN FUNCTION
-main_game = Main()
+#main_game = Main()
+
+menu = Menu()
+
+
+# while menu.running:
+#     events = pygame.event.get()
+#     for event in events:
+#         if event.type == pygame.QUIT:
+#             pygame.quit()
+#             sys.exit()
+#         else:
+#             menu.menu_screen()
+#         #if event.type == SCREEN_UPDATE:
+#         #if event.type == pygame.KEYDOWN:
+
+if menu.menu_screen() == 1:
+    main_game = Main()
 
 while main_game.running:
     events = pygame.event.get()
