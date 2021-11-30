@@ -239,6 +239,8 @@ class Menu:
 
 class Main:
     def __init__(self):
+        self.high_score = 0
+        self.HS = False
         self.snake = Snake()
         self.fruit = Fruit()
         self.running = True
@@ -260,16 +262,24 @@ class Main:
                 self.snake.reset()
                 self.dead = True
 
+    def play_go_sound(self):
+        self.lose_sound.play()
+
     def show_go_screen(self):
         # game over/continue
-        # key = pygame.event.get()
         score_text = len(self.snake.body) - 3
         SCREEN.fill(LIGHT_BLUE)
-        self.draw_text("GAME OVER", 60, WI / 2, HE / 4, WHITE)
-        self.draw_text("Score: " + str(score_text), 30, WI / 2, HE / 2, WHITE)
+        if score_text > self.high_score:
+            self.high_score = score_text
+            self.HS = True
+        elif score_text < self.high_score:
+            self.HS = False
+        self.draw_text("GAME OVER", 60, WI / 2, HE / 3, WHITE)
+        self.draw_text("Score: " + str(score_text), 30, WI / 2, HE / 2 - 25, WHITE)
         self.draw_text("Press a key to play again", 30, WI / 2, HE * 3 / 4, WHITE)
-        # pygame.display.update()
-        # self.wait_for_key(key)
+        self.draw_text("High Score: " + str(self.high_score), 30, WI / 2, HE / 2 + 25, WHITE)
+        if self.HS is True:
+            self.draw_text("NEW HIGH SCORE!!", 40, WI / 2, HE / 2 + 85, RED)
 
     def draw_elements(self):
         draw_grass()
