@@ -38,6 +38,10 @@ APPLE = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
+SNAKE_LOGO = pygame.image.load("Graphics/snake_logo.png")
+SNAKE_LOGO = pygame.transform.scale(SNAKE_LOGO, (50, 50))
+
+
 # DISPLAY
 SCREEN = pygame.display.set_mode((CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE))
 
@@ -207,7 +211,17 @@ class Menu:
             button_2 = pygame.Rect(200, 325, 200, 50)
             button_3 = pygame.Rect(200, 425, 200, 50)
 
+            pygame.draw.rect(SCREEN, WHITE, button_1)
+            self.draw_text('PLAY', 25, 200 + 100, 225 + 25, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_2)
+            self.draw_text('SCORES', 25, 200 + 100, 325 + 25, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_3)
+            self.draw_text('OPTIONS', 25, 200 + 100, 425 + 25, RED)
+
             if button_1.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 270))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
+                pygame.display.update()
                 if click:
                     self.play_sound.play()
                     self.running = False
@@ -215,6 +229,9 @@ class Menu:
                     return 1
 
             elif button_2.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 370))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
+                pygame.display.update()
                 if click:
                     self.running = False
                     print("highscores")
@@ -222,16 +239,12 @@ class Menu:
                     highscores.scores_in_display()
 
             if button_3.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 470))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
+                pygame.display.update()
                 if click:
                     self.click_sound.play()
                     print("options")
-
-            pygame.draw.rect(SCREEN, WHITE, button_1)
-            self.draw_text('PLAY', 25, 200+100, 225+25, RED)
-            pygame.draw.rect(SCREEN, WHITE, button_2)
-            self.draw_text('SCORES', 25, 200+100, 325+25, RED)
-            pygame.draw.rect(SCREEN, WHITE, button_3)
-            self.draw_text('OPTIONS', 25, 200+100, 425+25, RED)
 
             click = False
             for event in pygame.event.get():
@@ -312,6 +325,7 @@ class Highscores:
         if self.runningHS is False:
             menu = Menu()
             menu.menu_screen()
+
 
 
 class Main:
