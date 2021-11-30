@@ -318,6 +318,7 @@ class Main:
 
         if self.dead:
             self.game_over()
+            self.play_go_sound()
 
     def draw(self):
         # Game Loop - draw
@@ -363,24 +364,10 @@ def motion():
             main_game.snake.direction = Vector2(1, 0)
 
 
-
-
 # CALLING MAIN FUNCTION
 #main_game = Main()
 
 menu = Menu()
-
-
-# while menu.running:
-#     events = pygame.event.get()
-#     for event in events:
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#             sys.exit()
-#         else:
-#             menu.menu_screen()
-#         #if event.type == SCREEN_UPDATE:
-#         #if event.type == pygame.KEYDOWN:
 
 if menu.menu_screen() == 1:
     main_game = Main()
