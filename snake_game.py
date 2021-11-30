@@ -263,25 +263,41 @@ class Highscores:
         SCREEN.blit(text_surface, text_rect)
 
     def scores_in_display(self):
+        lista_highscores = []
         text_file_location = "Scores/Scores.txt"
         file = open(text_file_location)
         for linea in file:
             lista_highscores = linea.split(",")
-        lista_highscores.pop()
+            if len(lista_highscores) != 0:
+                lista_highscores.pop()
         print(lista_highscores)
+
         for i in range(0, (len(lista_highscores))):
             lista_highscores[i] = int(lista_highscores[i])
         print(lista_highscores)
         file.close()
         lista_highscores.sort(reverse=True)
         print(lista_highscores)
-        while self.runningHS is True:
+        print(len(lista_highscores))
+        while self.runningHS == True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
-            self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
-            self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300 , BLACK)
-            self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
-            self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
+            if len(lista_highscores) == 0:
+                self.draw_text("No hay ningún puntaje", 20, WI / 2, 250, BLACK)
+            elif len(lista_highscores) == 1:
+                self.draw_text("El puntaje más alto: ", 20, WI / 2, 250, BLACK)
+                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300, BLACK)
+            elif len(lista_highscores) == 2:
+                self.draw_text("Los dos puntajes más altos:", 20, WI / 2, 250, BLACK)
+                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300, BLACK)
+                self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
+            elif len(lista_highscores) > 2:
+                self.draw_text("Los tres puntajes más altos:", 20, WI / 2, 250, BLACK)
+                self.draw_text(("1. Score: " + str(lista_highscores[0])), 20, WI / 2, 300, BLACK)
+                self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
+                self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
+
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
