@@ -2,7 +2,6 @@ import random
 import sys
 import pygame
 from pygame.math import Vector2
-from pygame import mixer
 
 pygame.init()
 pygame.font.init()
@@ -33,38 +32,35 @@ WHITE = (255, 255, 255)
 LIGHT_BLUE = (84, 175, 243)
 
 # IMAGES
-LOAD_APPLE = pygame.image.load('Graphics/small_apple.png')
+LOAD_APPLE = pygame.image.load('Graphics/frutas/small_apple.png')
 APPLE = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
 
 #BACKGROUND IMAGES
-oropel_surface = pygame.image.load("Graphics/oropel.png")
+oropel_surface = pygame.image.load("Graphics/backgrounds/oropel.png")
 oropel_surface = pygame.transform.scale(oropel_surface, (1026, 607))
 
-grass_surface = pygame.image.load("Graphics/grass_texture.png")
+grass_surface = pygame.image.load("Graphics/backgrounds/grass_texture.png")
 grass_surface = pygame.transform.scale(grass_surface, (1026, 607))
 
-LOAD_BANANA = pygame.image.load('Graphics/banana.png')
+LOAD_BANANA = pygame.image.load('Graphics/frutas/banana.png')
 BANANA = pygame.transform.scale(LOAD_BANANA, (CELL_SIZE, CELL_SIZE))
 
-#back ground music
-
+#background music
 backg_music = pygame.mixer.Sound("Sound/junglehjinx.mp3")
 backg_music.set_volume(0.1)
 backg_music.play(-1)
 
-
-LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
+#more graphics
+LOAD_CHERRY = pygame.image.load('Graphics/frutas/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
 SNAKE_LOGO = pygame.image.load("Graphics/snake_logo.png")
 SNAKE_LOGO = pygame.transform.scale(SNAKE_LOGO, (50, 50))
 
-
 # DISPLAY
 SCREEN = pygame.display.set_mode((CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE))
 
 # SOUND
-
 pygame.display.set_caption(TITLE)
 LOSE = pygame.mixer.Sound('Sound/lose.wav')
 
@@ -78,32 +74,34 @@ PLAYING, GAMEOVER = range(2)
 
 
 class Snake:
+    # se cargan las texturas de la serpiente, se usan los vectores para dar la posicion de cada "bloque"
+    # de la serpiente
     def __init__(self):
         self.body = [Vector2(6, 10), Vector2(5, 10), Vector2(4, 10)]
         self.direction = Vector2(0, 0)
         self.new_block = False
 
         # HEAD
-        self.head_up = pygame.image.load('Graphics/head_up2.png')
-        self.head_down = pygame.image.load('Graphics/head_down2.png')
-        self.head_right = pygame.image.load('Graphics/head_right2.png')
-        self.head_left = pygame.image.load('Graphics/head_left2.png')
+        self.head_up = pygame.image.load('Graphics/skin1/head_up2.png')
+        self.head_down = pygame.image.load('Graphics/skin1/head_down2.png')
+        self.head_right = pygame.image.load('Graphics/skin1/head_right2.png')
+        self.head_left = pygame.image.load('Graphics/skin1/head_left2.png')
 
         # TAIL
-        self.tail_up = pygame.image.load('Graphics/tail_up2.png')
-        self.tail_down = pygame.image.load('Graphics/tail_down2.png')
-        self.tail_right = pygame.image.load('Graphics/tail_right2.png')
-        self.tail_left = pygame.image.load('Graphics/tail_left2.png')
+        self.tail_up = pygame.image.load('Graphics/skin1/tail_up2.png')
+        self.tail_down = pygame.image.load('Graphics/skin1/tail_down2.png')
+        self.tail_right = pygame.image.load('Graphics/skin1/tail_right2.png')
+        self.tail_left = pygame.image.load('Graphics/skin1/tail_left2.png')
 
         # VERTICAL AND HORIZONTAL .
-        self.body_horizontal = pygame.image.load('Graphics/body_horizontal2.png')
-        self.body_vertical = pygame.image.load('Graphics/body_vertical2.png')
+        self.body_horizontal = pygame.image.load('Graphics/skin1/body_horizontal2.png')
+        self.body_vertical = pygame.image.load('Graphics/skin1/body_vertical2.png')
 
         # CORNERS
-        self.body_tr = pygame.image.load('Graphics/body_tr2.png')
-        self.body_tl = pygame.image.load('Graphics/body_tl2.png')
-        self.body_br = pygame.image.load('Graphics/body_br2.png')
-        self.body_bl = pygame.image.load('Graphics/body_bl2.png')
+        self.body_tr = pygame.image.load('Graphics/skin1/body_tr2.png')
+        self.body_tl = pygame.image.load('Graphics/skin1/body_tl2.png')
+        self.body_br = pygame.image.load('Graphics/skin1/body_br2.png')
+        self.body_bl = pygame.image.load('Graphics/skin1/body_bl2.png')
 
         # SOUND .
         self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
@@ -201,7 +199,9 @@ class Fruit:
         self.pos = Vector2(self.x, self.y)
 
 
+# clase que se encarga de todas las funcionalidades del menú que aparece al inicio del juego
 class Menu:
+    # se cargan algunos assets necesarios
     def __init__(self):
         self.running = True
         self.menu_font = 'SNAKE/pixel_font.ttf'
@@ -213,6 +213,11 @@ class Menu:
         self.played = True
         self.key_esc = True
 
+    # método que se usa para facilitar la impresión de texto, parametrosÑ
+    # text: texto a hacer display
+    # size: tamaño de letra
+    # x, y: posiciones en x, y, respectivamente
+    # color: no sé
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.menu_font, size)
         text_surface = font.render(text, True, color)
@@ -225,6 +230,7 @@ class Menu:
         print("force to game")
         return correr_juego
 
+    # método que se encarga de generar los 3 botones, y  obtener input del usuario.
     def menu_screen(self):
         oropel_rect = oropel_surface.get_rect(center = (350,300))
         click = ""
@@ -239,11 +245,11 @@ class Menu:
             button_3 = pygame.Rect(200, 425, 200, 50)
 
             pygame.draw.rect(SCREEN, WHITE, button_1)
-            self.draw_text('PLAY', 25, 200 + 100, 225 + 25, RED)
+            self.draw_text('JUGAR', 25, 200 + 100, 225 + 25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_2)
-            self.draw_text('SCORES', 25, 200 + 100, 325 + 25, RED)
+            self.draw_text('PUNTAJES', 24, 200 + 100, 325 + 25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_3)
-            self.draw_text('OPTIONS', 25, 200 + 100, 425 + 25, RED)
+            self.draw_text('OPCIONES', 24, 200 + 100, 425 + 25, RED)
 
             if button_1.collidepoint((mx, my)):
                 SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 270))
@@ -252,7 +258,7 @@ class Menu:
                 if click:
                     self.play_sound.play()
                     self.running = False
-                    print("game")
+
                     self.force_to_game()
                     return 1
 
@@ -262,7 +268,6 @@ class Menu:
                 pygame.display.update()
                 if click:
                     self.click_sound.play()
-                    print("highscores")
                     highscores = Highscores()
                     highscores.scores_in_display()
                     # return 2
@@ -273,7 +278,6 @@ class Menu:
                 pygame.display.update()
                 if click:
                     self.click_sound.play()
-                    print("options")
                     options = Options()
                     options.options_screen()
 
@@ -291,7 +295,7 @@ class Menu:
                         click = True
             pygame.display.update()
 
-
+# clase que se encarga de la pestaña de Highscores en el menú
 class Highscores:
     def __init__(self):
         self.running = True
@@ -300,6 +304,7 @@ class Highscores:
         self.white_screen = SCREEN.fill(WHITE)
         self.menu_class = Menu()
 
+    # método que facilita la impresión de texto
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.GAME_FONT, size)
         text_surface = font.render(text, True, color)
@@ -307,6 +312,8 @@ class Highscores:
         text_rect.center = (x, y)
         SCREEN.blit(text_surface, text_rect)
 
+    # método que se encarga de acceder al archivo de Scores, leer la información en él y hacer
+    # display de los highscores en la pantalla.
     def scores_in_display(self):
         lista_highscores = []
         text_file_location = "Scores/Scores.txt"
@@ -319,11 +326,11 @@ class Highscores:
 
         for i in range(0, (len(lista_highscores))):
             lista_highscores[i] = int(lista_highscores[i])
-        print(lista_highscores)
+
         file.close()
         lista_highscores.sort(reverse=True)
-        print(lista_highscores)
-        print(len(lista_highscores))
+
+
         while self.runningHS is True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
@@ -359,7 +366,7 @@ class Highscores:
             menu.menu_screen()
             self.menu_class = 0
 
-
+# clase que se encarga de la ventana de opciones en el menú
 class Options:
     def __init__(self):
         self.cherry = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
@@ -381,6 +388,7 @@ class Options:
         text_rect.center = (x, y)
         SCREEN.blit(text_surface, text_rect)
 
+    # metodo  que imprime los botones y detecta el input del usuario
     def options_screen(self):
         click = ""
         music_on = ""
@@ -406,7 +414,7 @@ class Options:
                 SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(255, 170))
                 SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
                 if click:
-                    print("opciones1")
+
                     self.click_sound.play()
                     #self.running = False
                     if music_on == False:
@@ -514,12 +522,12 @@ class Main:
         elif score_text < self.high_score:
             self.HS = False
         self.draw_text("GAME OVER", 50, WI / 2, HE / 3, WHITE)
-        self.draw_text("Score: " + str(score_text), 20, WI / 2, HE / 2 - 25, WHITE)
-        self.draw_text("Press a key to play again", 20, WI / 2, HE * 3 / 4, WHITE)
-        self.draw_text("or ESC for main menu", 20, WI / 2, HE * 3 / 4 + 25, WHITE)
-        self.draw_text("High Score: " + str(self.high_score), 20, WI / 2, HE / 2 + 28, WHITE)
+        self.draw_text("Puntaje: " + str(score_text), 20, WI / 2, HE / 2 - 25, WHITE)
+        self.draw_text("Presione cualquier tecla para jugar de nuevo", 13, WI / 2, HE * 3 / 4, WHITE)
+        self.draw_text("o ESC para ir al menú", 20, WI / 2, HE * 3 / 4 + 25, WHITE)
+        self.draw_text("Puntaje máximo: " + str(self.high_score), 20, WI / 2, HE / 2 + 28, WHITE)
         if self.HS is True:
-            self.draw_text("NEW HIGH SCORE!!", 25, WI / 2, HE / 2 + 85, RED)
+                self.draw_text("NUEVO PUNTAJE MÁXIMO!!", 25, WI / 2, HE / 2 + 85, RED)
 
     def draw_elements(self):
         self.snake.draw_snake()
@@ -612,10 +620,6 @@ if menu.menu_screen() == 1:
     print("si")
     correr_juego = True
 
-
-
-
-
 while correr_juego:
     events = pygame.event.get()
     for event in events:
@@ -628,7 +632,7 @@ while correr_juego:
             motion()
 
 
-    # SCREEN.fill(GREEN)
+
     SCREEN.fill(BLACK)
     grass_rect = grass_surface.get_rect(center=(350, 300))
     SCREEN.blit(grass_surface, grass_rect)
