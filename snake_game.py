@@ -612,9 +612,7 @@ if menu.menu_screen() == 1:
     print("si")
     correr_juego = True
 
-if options.options_screen() == 1:
-    print("musica, si")
-    backg_music.play(-1)
+
 
 
 
