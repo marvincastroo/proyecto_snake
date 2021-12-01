@@ -233,10 +233,12 @@ class Menu:
                 SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
                 pygame.display.update()
                 if click:
+                    self.click_sound.play()
                     self.running = False
                     print("highscores")
                     highscores = Highscores()
                     highscores.scores_in_display()
+                    # return 2
 
             if button_3.collidepoint((mx, my)):
                 SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 470))
@@ -267,6 +269,7 @@ class Highscores:
         self.runningHS = True
         self.GAME_FONT = "SNAKE/pixel_font.ttf"
         self.white_screen = SCREEN.fill(WHITE)
+        self.menu_class = Menu()
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.GAME_FONT, size)
@@ -292,7 +295,7 @@ class Highscores:
         lista_highscores.sort(reverse=True)
         print(lista_highscores)
         print(len(lista_highscores))
-        while self.runningHS == True:
+        while self.runningHS is True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
             if len(lista_highscores) == 0:
@@ -310,7 +313,6 @@ class Highscores:
                 self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
                 self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
 
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -325,6 +327,8 @@ class Highscores:
         if self.runningHS is False:
             menu = Menu()
             menu.menu_screen()
+            self.menu_class = 0
+
 
 
 
@@ -503,4 +507,3 @@ while correr_juego:
 
     pygame.display.flip()
     CLOCK.tick(FPS)
-# a
