@@ -2,6 +2,7 @@ import random
 import sys
 import pygame
 from pygame.math import Vector2
+from pygame import mixer
 
 pygame.init()
 pygame.font.init()
@@ -44,6 +45,12 @@ grass_surface = pygame.transform.scale(grass_surface, (1026, 607))
 
 LOAD_BANANA = pygame.image.load('Graphics/banana.png')
 BANANA = pygame.transform.scale(LOAD_BANANA, (CELL_SIZE, CELL_SIZE))
+
+#back ground music
+
+backg_music = pygame.mixer.Sound("Sound/junglehjinx.mp3")
+backg_music.set_volume(0.1)
+backg_music.play(-1)
 
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
@@ -100,6 +107,7 @@ class Snake:
 
         # SOUND .
         self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+        self.crunch_sound.set_volume(0.2)
 
     def draw_snake(self):
         self.update_head_graphics()
@@ -199,7 +207,9 @@ class Menu:
         self.menu_font = 'SNAKE/pixel_font.ttf'
         self.white_screen = SCREEN.fill(WHITE)
         self.click_sound = pygame.mixer.Sound('Sound/click.wav')
+        self.click_sound.set_volume(0.1)
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
+        self.play_sound.set_volume(0.1)
         self.played = True
         self.key_esc = True
 
@@ -427,9 +437,11 @@ class Main:
         self.fruit = Fruit()
         self.running = True
         self.lose_sound = pygame.mixer.Sound('Sound/lose.wav')
+        self.lose_sound.set_volume(0.1)
         self.dead = True
         self.currentState = PLAYING
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
+        self.play_sound.set_volume(0.1)
         self.game_font = 'SNAKE/pixel_font.ttf'
         self.menu = False
         self.options = Options
@@ -493,6 +505,7 @@ class Main:
             self.fruit.randomize()
             self.snake.add_block()
             self.snake.play_crunch_sound()
+
         for block in self.snake.body[1:]:
             if block == self.fruit.pos:
                 self.fruit.randomize()
