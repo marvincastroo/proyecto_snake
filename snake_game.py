@@ -7,7 +7,7 @@ pygame.init()
 pygame.font.init()
 
 # VARIABLES
-WIDTH, HEIGHT = 400, 500
+
 FPS = 60
 SURF_WIDTH, SURF_HEIGHT = 100, 200
 CELL_SIZE = 40
@@ -69,8 +69,9 @@ CLOCK = pygame.time.Clock()
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)  # 150 milliseconds
 
-# STATE
+# STATE .
 PLAYING, GAMEOVER = range(2)
+
 
 
 class Snake:
@@ -322,6 +323,7 @@ class Highscores:
         file.close()
         lista_highscores.sort(reverse=True)
 
+
         while self.runningHS is True:
             SCREEN.fill(WHITE)
             self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
@@ -390,6 +392,7 @@ class Options:
             button_2 = pygame.Rect(300, 130, 50, 40)
             button_3 = pygame.Rect(20, 210, 320, 40)
 
+
             pygame.draw.rect(SCREEN, WHITE, button_1)
             pygame.draw.rect(SCREEN, WHITE, button_2)
             pygame.draw.rect(SCREEN, WHITE, button_3)
@@ -408,6 +411,7 @@ class Options:
                     if music_on is False:
                         backg_music.play(-1)
                         self.running = False
+
 
             if button_2.collidepoint((mx, my)):
                 SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(375, 170))
@@ -600,7 +604,6 @@ options = Options()
 
 if menu.menu_screen() == 1:
     main_game = Main()
-    print("si")
     correr_juego = True
 
 while correr_juego:
