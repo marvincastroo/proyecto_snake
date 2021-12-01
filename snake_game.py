@@ -67,26 +67,26 @@ class Snake:
         self.new_block = False
 
         # HEAD
-        self.head_up = pygame.image.load('Graphics/head_up.png')
-        self.head_down = pygame.image.load('Graphics/head_down.png')
-        self.head_right = pygame.image.load('Graphics/head_right.png')
-        self.head_left = pygame.image.load('Graphics/head_left.png')
+        self.head_up = pygame.image.load('Graphics/head_up2.png')
+        self.head_down = pygame.image.load('Graphics/head_down2.png')
+        self.head_right = pygame.image.load('Graphics/head_right2.png')
+        self.head_left = pygame.image.load('Graphics/head_left2.png')
 
         # TAIL
-        self.tail_up = pygame.image.load('Graphics/tail_up.png')
-        self.tail_down = pygame.image.load('Graphics/tail_down.png')
-        self.tail_right = pygame.image.load('Graphics/tail_right.png')
-        self.tail_left = pygame.image.load('Graphics/tail_left.png')
+        self.tail_up = pygame.image.load('Graphics/tail_up2.png')
+        self.tail_down = pygame.image.load('Graphics/tail_down2.png')
+        self.tail_right = pygame.image.load('Graphics/tail_right2.png')
+        self.tail_left = pygame.image.load('Graphics/tail_left2.png')
 
         # VERTICAL AND HORIZONTAL
-        self.body_horizontal = pygame.image.load('Graphics/body_horizontal.png')
-        self.body_vertical = pygame.image.load('Graphics/body_vertical.png')
+        self.body_horizontal = pygame.image.load('Graphics/body_horizontal2.png')
+        self.body_vertical = pygame.image.load('Graphics/body_vertical2.png')
 
         # CORNERS
-        self.body_tr = pygame.image.load('Graphics/body_tr.png')
-        self.body_tl = pygame.image.load('Graphics/body_tl.png')
-        self.body_br = pygame.image.load('Graphics/body_br.png')
-        self.body_bl = pygame.image.load('Graphics/body_bl.png')
+        self.body_tr = pygame.image.load('Graphics/body_tr2.png')
+        self.body_tl = pygame.image.load('Graphics/body_tl2.png')
+        self.body_br = pygame.image.load('Graphics/body_br2.png')
+        self.body_bl = pygame.image.load('Graphics/body_bl2.png')
 
         # SOUND
         self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
