@@ -35,6 +35,10 @@ LIGHT_BLUE = (84, 175, 243)
 LOAD_APPLE = pygame.image.load('Graphics/small_apple.png')
 APPLE = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
 
+#BACKGROUND IMAGES
+oropel_surface = pygame.image.load("Graphics/oropel.png")
+oropel_surface = pygame.transform.scale(oropel_surface, (1026, 607))
+
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
@@ -201,9 +205,11 @@ class Menu:
         SCREEN.blit(text_surface, text_rect)
 
     def menu_screen(self):
+        oropel_rect = oropel_surface.get_rect(center = (350,300))
         click = ""
         while self.running is True:
             SCREEN.fill(BLACK)
+            SCREEN.blit(oropel_surface, oropel_rect)
             self.draw_text("SNAKE!", 60, WI / 2, HE / 4, WHITE)
             mx, my = pygame.mouse.get_pos()
 
