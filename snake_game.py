@@ -43,7 +43,7 @@ grass_surface = pygame.image.load("Graphics/grass_texture.png")
 grass_surface = pygame.transform.scale(grass_surface, (1026, 607))
 
 LOAD_BANANA = pygame.image.load('Graphics/banana.png')
-BANANA = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
+BANANA = pygame.transform.scale(LOAD_BANANA, (CELL_SIZE, CELL_SIZE))
 
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
@@ -486,7 +486,7 @@ class Main:
     def draw_elements(self):
         self.snake.draw_snake()
         self.draw()
-        self.fruit.draw_fruit(CHERRY)
+        self.fruit.draw_fruit(BANANA)
 
     def check_collision(self):
         if self.fruit.pos == self.snake.body[0]:
