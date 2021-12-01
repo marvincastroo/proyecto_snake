@@ -26,10 +26,12 @@ RED = (195, 12, 29)
 TURQUOISE = (57, 199, 172)
 GRASS_COLOR = (175, 243, 70)
 BLACK = (0, 0, 0)
+RED_GRASS = (243, 6, 0)
 YELLOW = (250, 231, 1)
 YELLOW_GRASS = (255, 213, 1)
 WHITE = (255, 255, 255)
 LIGHT_BLUE = (84, 175, 243)
+DARK_RED = (199, 0, 0)
 
 # IMAGES
 LOAD_APPLE = pygame.image.load('Graphics/small_apple.png')
@@ -45,6 +47,8 @@ CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 SNAKE_LOGO = pygame.image.load("Graphics/snake_logo.png")
 SNAKE_LOGO = pygame.transform.scale(SNAKE_LOGO, (50, 50))
 
+LOAD_GRASS = pygame.image.load('Graphics/grass_texture.png')
+GRASS = pygame.transform.scale(LOAD_GRASS, (CELL_SIZE*CELL_NUMBER, CELL_SIZE*CELL_NUMBER))
 
 # DISPLAY
 SCREEN = pygame.display.set_mode((CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE))
@@ -194,8 +198,7 @@ class Menu:
         self.white_screen = SCREEN.fill(WHITE)
         self.click_sound = pygame.mixer.Sound('Sound/click.wav')
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
-        self.played = True
-        self.key_esc = True
+        self.check = False
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.menu_font, size)
@@ -240,11 +243,12 @@ class Menu:
                 pygame.display.update()
                 if click:
                     self.click_sound.play()
-                    self.running = False
-                    print("highscores")
-                    highscores = Highscores()
-                    highscores.scores_in_display()
-                    # return 2
+                    self.running = True
+                    # aca running deja de ser true y nunca se cambia, pasa que el menú no se está reiniciando
+                    print("high scores")
+                    # highscores = Highscores()
+                    # highscores.scores_in_display()
+                    return 2
 
             if button_3.collidepoint((mx, my)):
                 SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(175, 470))
@@ -268,6 +272,10 @@ class Menu:
                         click = True
             pygame.display.update()
 
+    def check_button2(self):
+        if self.menu_screen() == 2:
+            self.check = False
+
 
 class Highscores:
     def __init__(self):
@@ -276,6 +284,7 @@ class Highscores:
         self.GAME_FONT = "SNAKE/pixel_font.ttf"
         self.white_screen = SCREEN.fill(WHITE)
         self.menu_class = Menu()
+        self.run_game = False
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.GAME_FONT, size)
@@ -295,7 +304,7 @@ class Highscores:
         print(lista_highscores)
 
         for i in range(0, (len(lista_highscores))):
-            lista_highscores[i] = int(lista_highscores[i])
+            lista_highscores[int(int(i))] = int(lista_highscores[i])
         print(lista_highscores)
         file.close()
         lista_highscores.sort(reverse=True)
@@ -303,7 +312,7 @@ class Highscores:
         print(len(lista_highscores))
         while self.runningHS is True:
             SCREEN.fill(WHITE)
-            self.draw_text("HIGHSCORES ", 40, WI / 2, HE / 4, BLACK)
+            self.draw_text("HIGH SCORES ", 40, WI / 2, HE / 4, BLACK)
             if len(lista_highscores) == 0:
                 self.draw_text("No hay ningún puntaje", 20, WI / 2, 250, BLACK)
             elif len(lista_highscores) == 1:
@@ -319,23 +328,22 @@ class Highscores:
                 self.draw_text(("2. Score: " + str(lista_highscores[1])), 20, WI / 2, 350, BLACK)
                 self.draw_text(("3. Score: " + str(lista_highscores[2])), 20, WI / 2, 400, BLACK)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.runningHS = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        click = True
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         pygame.quit()
+            #         sys.exit()
+            #     if event.type == pygame.KEYDOWN:
+            #         if event.key == pygame.K_ESCAPE:
+            #             self.run_game = True
+            #         if self.run_game is True:
+            #             main_menu = Menu()
+            #             main_menu.menu_screen()
+            #             if main_menu == 1:
+                            # return True
+                # if event.type == pygame.MOUSEBUTTONDOWN:
+                #     if event.button == 1:
+                #         click = True
             pygame.display.update()
-        if self.runningHS is False:
-            menu = Menu()
-            menu.menu_screen()
-            self.menu_class = 0
-
-
 
 
 class Main:
@@ -485,12 +493,30 @@ menu = Menu()
 correr_juego = False
 correr_highscores = False
 highscores = Highscores()
+run_game = False
 
 if menu.menu_screen() == 1:
     main_game = Main()
     print("si")
     correr_juego = True
 
+if menu.menu_screen() == 2:
+    highscores = Highscores()
+    print('si hs')
+    correr_highscores = True
+
+while correr_highscores:
+    for event in pygame.event.get():
+        # if event.type == pygame.QUIT:
+        #     pygame.quit()
+        #     sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                run_game = True
+            if run_game is True:
+                main_menu = Menu()
+                main_menu.menu_screen()
+    highscores.scores_in_display()
 
 while correr_juego:
     events = pygame.event.get()
