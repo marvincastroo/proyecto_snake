@@ -46,7 +46,7 @@ LOAD_BANANA = pygame.image.load('Graphics/frutas/banana.png')
 BANANA = pygame.transform.scale(LOAD_BANANA, (CELL_SIZE, CELL_SIZE))
 
 #background music
-backg_music = pygame.mixer.Sound("Sound/junglehjinx.mp3")
+backg_music = pygame.mixer.Sound("Sound/Sound_junglehjinx.wav")
 backg_music.set_volume(0.1)
 backg_music.play(-1)
 
