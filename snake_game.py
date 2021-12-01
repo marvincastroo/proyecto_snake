@@ -88,7 +88,7 @@ class Snake:
         self.body_br = pygame.image.load('Graphics/body_br2.png')
         self.body_bl = pygame.image.load('Graphics/body_bl2.png')
 
-        # SOUND
+        # SOUND .
         self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
 
     def draw_snake(self):
