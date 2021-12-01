@@ -204,6 +204,11 @@ class Menu:
         text_rect.center = (x, y)
         SCREEN.blit(text_surface, text_rect)
 
+    def force_to_game(self):
+        correr_juego = True
+        print("force to game")
+        return
+
     def menu_screen(self):
         oropel_rect = oropel_surface.get_rect(center = (350,300))
         click = ""
@@ -232,6 +237,7 @@ class Menu:
                     self.play_sound.play()
                     self.running = False
                     print("game")
+                    self.force_to_game()
                     return 1
 
             elif button_2.collidepoint((mx, my)):
@@ -267,6 +273,7 @@ class Menu:
                     if event.button == 1:
                         click = True
             pygame.display.update()
+
 
 
 class Highscores:
@@ -326,6 +333,7 @@ class Highscores:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.runningHS = False
+                        Menu
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
