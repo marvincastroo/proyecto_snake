@@ -39,6 +39,9 @@ APPLE = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
 oropel_surface = pygame.image.load("Graphics/oropel.png")
 oropel_surface = pygame.transform.scale(oropel_surface, (1026, 607))
 
+grass_surface = pygame.image.load("Graphics/grass_texture.png")
+grass_surface = pygame.transform.scale(grass_surface, (1026, 607))
+
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
@@ -275,7 +278,6 @@ class Menu:
             pygame.display.update()
 
 
-
 class Highscores:
     def __init__(self):
         self.running = True
@@ -344,8 +346,6 @@ class Highscores:
             self.menu_class = 0
 
 
-
-
 class Main:
     def __init__(self):
         self.high_score = 0
@@ -410,7 +410,7 @@ class Main:
             self.draw_text("NEW HIGH SCORE!!", 25, WI / 2, HE / 2 + 85, RED)
 
     def draw_elements(self):
-        draw_grass()
+        # draw_grass()
         self.fruit.draw_fruit()
         self.snake.draw_snake()
         self.draw()
@@ -511,7 +511,10 @@ while correr_juego:
         if event.type == pygame.KEYDOWN:
             motion()
 
-    SCREEN.fill(GREEN)
+    # SCREEN.fill(GREEN)
+    SCREEN.fill(BLACK)
+    grass_rect = grass_surface.get_rect(center=(350, 300))
+    SCREEN.blit(grass_surface, grass_rect)
     if main_game.currentState == PLAYING:
         main_game.wait_for_key(events)
         main_game.draw_elements()
