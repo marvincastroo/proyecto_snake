@@ -42,6 +42,9 @@ oropel_surface = pygame.transform.scale(oropel_surface, (1026, 607))
 grass_surface = pygame.image.load("Graphics/grass_texture.png")
 grass_surface = pygame.transform.scale(grass_surface, (1026, 607))
 
+LOAD_BANANA = pygame.image.load('Graphics/banana.png')
+BANANA = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
+
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
@@ -180,9 +183,9 @@ class Fruit:
         self.y = random.randint(0, CELL_NUMBER - 1)
         self.pos = Vector2(self.x, self.y)
 
-    def draw_fruit(self):
+    def draw_fruit(self, fruit_choice):
         fruit_rect = pygame.Rect(int(self.pos.x * CELL_SIZE), int(self.pos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE)
-        SCREEN.blit(CHERRY, fruit_rect)
+        SCREEN.blit(fruit_choice, fruit_rect)
 
     def randomize(self):
         self.x = random.randint(0, CELL_NUMBER - 1)
@@ -249,7 +252,6 @@ class Menu:
                 pygame.display.update()
                 if click:
                     self.click_sound.play()
-
                     print("highscores")
                     highscores = Highscores()
                     highscores.scores_in_display()
@@ -262,6 +264,8 @@ class Menu:
                 if click:
                     self.click_sound.play()
                     print("options")
+                    options = Options()
+                    options.options_screen()
 
             click = False
             for event in pygame.event.get():
@@ -335,7 +339,7 @@ class Highscores:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.runningHS = False
-                        Menu
+                        Menu()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
@@ -344,6 +348,75 @@ class Highscores:
             menu = Menu()
             menu.menu_screen()
             self.menu_class = 0
+
+
+class Options:
+    def __init__(self):
+        self.cherry = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
+        self.apple = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
+        self.banana = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
+        self.running = True
+        self.click_sound = pygame.mixer.Sound('Sound/click.wav')
+        self.fruit = Fruit()
+        self.options_font = 'SNAKE/pixel_font.ttf'
+        self.main = Main()
+        self.menu = Menu()
+
+    def draw_text(self, text, size, x, y, color):
+        font = pygame.font.Font(self.options_font, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x, y)
+        SCREEN.blit(text_surface, text_rect)
+
+    def options_screen(self):
+        click = ""
+        while self.running is True:
+            SCREEN.fill(BLACK)
+            self.draw_text("change object", 40, WI / 2, HE / 4, WHITE)
+            mx, my = pygame.mouse.get_pos()
+
+            button_1 = pygame.Rect(200, 225, 200, 50)
+            button_2 = pygame.Rect(200, 325, 200, 50)
+            button_3 = pygame.Rect(200, 425, 200, 50)
+
+            pygame.draw.rect(SCREEN, WHITE, button_1)
+            self.draw_text('APPLE', 25, 200 + 100, 225 + 25, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_2)
+            self.draw_text('CHERRY', 25, 200 + 100, 325 + 25, RED)
+            pygame.draw.rect(SCREEN, WHITE, button_3)
+            self.draw_text('BANANA', 25, 200 + 100, 425 + 25, RED)
+
+            if button_1.collidepoint((mx, my)):
+                if click:
+                    self.click_sound.play()
+                    self.running = False
+                    return 1
+
+            if button_2.collidepoint((mx, my)):
+                if click:
+                    self.click_sound.play()
+                    self.running = False
+                    return 2
+
+            if button_3.collidepoint((mx, my)):
+                if click:
+                    self.click_sound.play()
+                    self.running = False
+                    return 3
+
+            click = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.menu.menu_screen()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+            pygame.display.update()
 
 
 class Main:
@@ -359,6 +432,7 @@ class Main:
         self.play_sound = pygame.mixer.Sound('Sound/play.wav')
         self.game_font = 'SNAKE/pixel_font.ttf'
         self.menu = False
+        self.options = Options
 
     def update(self):
         if not self.dead:
@@ -410,10 +484,9 @@ class Main:
             self.draw_text("NEW HIGH SCORE!!", 25, WI / 2, HE / 2 + 85, RED)
 
     def draw_elements(self):
-        # draw_grass()
-        self.fruit.draw_fruit()
         self.snake.draw_snake()
         self.draw()
+        self.fruit.draw_fruit(CHERRY)
 
     def check_collision(self):
         if self.fruit.pos == self.snake.body[0]:
@@ -493,6 +566,7 @@ menu = Menu()
 correr_juego = False
 correr_highscores = False
 highscores = Highscores()
+options = Options()
 
 if menu.menu_screen() == 1:
     main_game = Main()
