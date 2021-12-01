@@ -52,6 +52,7 @@ backg_music = pygame.mixer.Sound("Sound/junglehjinx.mp3")
 backg_music.set_volume(0.1)
 backg_music.play(-1)
 
+
 LOAD_CHERRY = pygame.image.load('Graphics/cherry.png')
 CHERRY = pygame.transform.scale(LOAD_CHERRY, (CELL_SIZE, CELL_SIZE))
 
@@ -63,8 +64,7 @@ SNAKE_LOGO = pygame.transform.scale(SNAKE_LOGO, (50, 50))
 SCREEN = pygame.display.set_mode((CELL_NUMBER * CELL_SIZE, CELL_NUMBER * CELL_SIZE))
 
 # SOUND
-MUSIC = pygame.mixer.Sound('Sound/Solve-The-Puzzle.wav')
-pygame.mixer.pre_init(44100, -16, 2, 512)
+
 pygame.display.set_caption(TITLE)
 LOSE = pygame.mixer.Sound('Sound/lose.wav')
 
@@ -367,10 +367,12 @@ class Options:
         self.banana = pygame.transform.scale(LOAD_APPLE, (CELL_SIZE, CELL_SIZE))
         self.running = True
         self.click_sound = pygame.mixer.Sound('Sound/click.wav')
+        self.click_sound.set_volume(0.1)
         self.fruit = Fruit()
         self.options_font = 'SNAKE/pixel_font.ttf'
         self.main = Main()
         self.menu = Menu()
+        self.music_on = True
 
     def draw_text(self, text, size, x, y, color):
         font = pygame.font.Font(self.options_font, size)
@@ -381,39 +383,59 @@ class Options:
 
     def options_screen(self):
         click = ""
+        music_on = ""
         while self.running is True:
             SCREEN.fill(BLACK)
-            self.draw_text("change object", 40, WI / 2, HE / 4, WHITE)
+            self.draw_text("música:", 20, 100, HE / 4, WHITE)
+
             mx, my = pygame.mouse.get_pos()
 
-            button_1 = pygame.Rect(200, 225, 200, 50)
-            button_2 = pygame.Rect(200, 325, 200, 50)
-            button_3 = pygame.Rect(200, 425, 200, 50)
+            button_1 = pygame.Rect(180, 130, 50, 40)
+            button_2 = pygame.Rect(300, 130, 50, 40)
+            button_3 = pygame.Rect(20, 210, 320, 40)
+
 
             pygame.draw.rect(SCREEN, WHITE, button_1)
-            self.draw_text('APPLE', 25, 200 + 100, 225 + 25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_2)
-            self.draw_text('CHERRY', 25, 200 + 100, 325 + 25, RED)
             pygame.draw.rect(SCREEN, WHITE, button_3)
-            self.draw_text('BANANA', 25, 200 + 100, 425 + 25, RED)
+            self.draw_text('SI', 20, 205 ,150 , RED)
+            self.draw_text('NO', 20, 325, 150, RED)
+            self.draw_text("Borrar puntajes", 20, 180, 230, RED)
 
             if button_1.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(255, 170))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
                 if click:
+                    print("opciones1")
                     self.click_sound.play()
-                    self.running = False
-                    return 1
+                    #self.running = False
+                    if music_on == False:
+                        backg_music.play(-1)
+                        self.running = False
+
 
             if button_2.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(375, 170))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
                 if click:
                     self.click_sound.play()
+                    #self.running = False
+                    backg_music.stop()
+                    music_on = False
                     self.running = False
-                    return 2
 
             if button_3.collidepoint((mx, my)):
+                SNAKE_LOGO_rect = SNAKE_LOGO.get_rect(midbottom=(365, 250))
+                SCREEN.blit(SNAKE_LOGO, SNAKE_LOGO_rect)
                 if click:
+                    file = open("Scores/Scores.txt", "r+")
+                    file.truncate(0)
+                    file.close()
                     self.click_sound.play()
                     self.running = False
-                    return 3
+
+
+
 
             click = False
             for event in pygame.event.get():
@@ -422,7 +444,11 @@ class Options:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.menu.menu_screen()
+                        Menu()
+                        self.running = False
+                        pygame.display.update()
+
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
@@ -586,6 +612,11 @@ if menu.menu_screen() == 1:
     print("si")
     correr_juego = True
 
+if options.options_screen() == 1:
+    print("musica, si")
+    backg_music.play(-1)
+
+
 
 while correr_juego:
     events = pygame.event.get()
@@ -597,6 +628,7 @@ while correr_juego:
             main_game.update()
         if event.type == pygame.KEYDOWN:
             motion()
+
 
     # SCREEN.fill(GREEN)
     SCREEN.fill(BLACK)
