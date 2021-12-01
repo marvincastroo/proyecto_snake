@@ -78,7 +78,7 @@ class Snake:
         self.tail_right = pygame.image.load('Graphics/tail_right2.png')
         self.tail_left = pygame.image.load('Graphics/tail_left2.png')
 
-        # VERTICAL AND HORIZONTAL
+        # VERTICAL AND HORIZONTAL .
         self.body_horizontal = pygame.image.load('Graphics/body_horizontal2.png')
         self.body_vertical = pygame.image.load('Graphics/body_vertical2.png')
 
